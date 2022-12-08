@@ -6,7 +6,7 @@
 /*   By: marinjim <marinjim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 13:05:57 by marinjim          #+#    #+#             */
-/*   Updated: 2022/12/08 12:33:24 by marinjim         ###   ########.fr       */
+/*   Updated: 2022/12/08 16:57:12 by marinjim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ unsigned long int	ft_strlen(const char *str);
 char				*ft_strjoin(const char *str1, const char *str2);
 int					ft_strchr(const char *str, int c);
 void				*ft_memcpy(void *dest, const void *src, size_t num);
+char				*ft_buf_to_aux(char *aux, char *buf);
 
 unsigned long int	ft_strlen(const char *str)
 {
@@ -88,4 +89,13 @@ void	*ft_memcpy(void *dest, const void *src, size_t num)
 		num--;
 	}
 	return (dest);
+}
+
+char	*ft_buf_to_aux(char *aux, char *buf)
+{
+	char	*tmp;
+
+	tmp = ft_strjoin(aux, buf);
+	free(aux);
+	return (tmp);
 }
