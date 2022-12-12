@@ -6,37 +6,39 @@
 /*   By: marinjim <marinjim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 13:05:57 by marinjim          #+#    #+#             */
-/*   Updated: 2022/12/08 16:57:12 by marinjim         ###   ########.fr       */
+/*   Updated: 2022/12/12 17:21:23 by marinjim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
 unsigned long int	ft_strlen(const char *str);
-char				*ft_strjoin(const char *str1, const char *str2);
+char				*ft_strjoin(char *str1, const char *str2);
 int					ft_strchr(const char *str, int c);
-void				*ft_memcpy(void *dest, const void *src, size_t num);
-char				*ft_buf_to_aux(char *aux, char *buf);
+void				ft_bzero(void *str, size_t size);
+void				*ft_calloc(size_t count, size_t size);
 
 unsigned long int	ft_strlen(const char *str)
 {
 	int	count;
 
 	count = 0;
-	while (*str != '\0')
+	if (!str)
+		return (0);
+	while (str[count] != '\0')
 	{
-		str++;
 		count++;
 	}
 	return (count);
 }
 
-char	*ft_strjoin(const char *str1, const char *str2)
+char	*ft_strjoin(char *str1, const char *str2)
 {
 	char	*string;
 	int		length1;
 	int		length2;
 	int		i;
+	int		j;
 
 	length1 = ft_strlen(str1);
 	length2 = ft_strlen(str2);
@@ -49,53 +51,52 @@ char	*ft_strjoin(const char *str1, const char *str2)
 		string[i] = str1[i];
 		i++;
 	}
-	while (*str2 != '\0')
-	{
-		string[i] = *str2;
-		i++;
-		str2++;
-	}
-	string[i] = '\0';
+	j = -1;
+	while (str2[++j] != '\0')
+		string[i + j] = str2[j];
+	string[i + j] = '\0';
 	return (string);
 }
 
 int	ft_strchr(const char *str, int c)
 {
-	while (*str != '\0')
+	int	i;
+
+	i = 0;
+	while (str[i] != '\0')
 	{
-		if (*str == (char)c)
+		if (str[i] == (char)c)
 			return (1);
-		str++;
+		i++;
 	}
 	if ((char)c == '\0')
 		return (1);
 	return (0);
 }
 
-void	*ft_memcpy(void *dest, const void *src, size_t num)
+void	ft_bzero(void *str, size_t size)
 {
-	char	*d;
-	char	*s;
+	unsigned long int		i;
+	char					*aux;
 
-	d = (char *) dest;
-	s = (char *) src;
-	if (num == 0 || s == d)
-		return (dest);
-	while (num > 0)
+	aux = (char *)str;
+	i = 0;
+	while (i < size)
 	{
-		*d = *s;
-		d++;
-		s++;
-		num--;
+		aux[i] = '\0';
+		i++;
 	}
-	return (dest);
 }
 
-char	*ft_buf_to_aux(char *aux, char *buf)
+void	*ft_calloc(size_t count, size_t size)
 {
-	char	*tmp;
+	void	*str;
 
-	tmp = ft_strjoin(aux, buf);
-	free(aux);
-	return (tmp);
+	str = (void *)malloc(count * size);
+	if (str == NULL || size < 0)
+	{
+		return (NULL);
+	}
+	ft_bzero(str, (count * size));
+	return (str);
 }

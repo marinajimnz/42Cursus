@@ -6,7 +6,7 @@
 /*   By: marinjim <marinjim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 13:01:05 by marinjim          #+#    #+#             */
-/*   Updated: 2022/12/08 17:00:33 by marinjim         ###   ########.fr       */
+/*   Updated: 2022/12/12 17:34:07 by marinjim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,25 +14,23 @@
 
 char	*get_next_line(int fd);
 char	*ft_read_line(int fd, char *aux);
-char	*ft_clean_aux(char *aux, char *ret);
+void	*ft_ret_line(char *aux);
+char	*ft_clean_aux(char *aux);
+char	*ft_buf_to_aux(char *aux, char *buf);
 
 char	*get_next_line(int fd)
 {
-	static char		*aux;
-	char			*ret;
-	int				i;
+	char	*aux;
+	char	*ret;
 
-	i = 0;
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+		return (NULL);
+	aux = NULL;
 	aux = ft_read_line(fd, aux);
 	if (!aux)
 		return (NULL);
-	while (aux[i] != '\n')
-		i++;
-	ret = (char *)malloc(((i + 1) * sizeof (char)) + 1);
-	if (!ret)
-		return (NULL);
-	ft_memcpy(ret, aux, (i + 1));
-	aux = ft_clean_aux(aux, ret);
+	ret = ft_ret_line(aux);
+	aux = ft_clean_aux(aux);
 	return (ret);
 }
 
@@ -42,13 +40,8 @@ char	*ft_read_line(int fd, char *aux)
 	int			check_read;
 
 	if (!aux)
-	{
-		aux = (char *) malloc (1 * sizeof (char));
-		aux[0] = '\0';
-	}
-	buf = (char *) malloc(BUFFER_SIZE + 1 * sizeof(char));
-	if (!buf)
-		return (NULL);
+		aux = ft_calloc(1, sizeof(char));
+	buf = ft_calloc((BUFFER_SIZE + 1), sizeof(char));
 	check_read = 1;
 	while (check_read > 0)
 	{
@@ -58,25 +51,54 @@ char	*ft_read_line(int fd, char *aux)
 			free(buf);
 			return (NULL);
 		}
-		buf[check_read] = '\0';
-		aux = ft_buf_to_aux(aux, buf);
+		buf[check_read] = 0;
+		aux = ft_strjoin(aux, buf);
+		if (ft_strchr(buf, '\n'))
+			break ;
 	}
 	free(buf);
+	buf = NULL;
 	return (aux);
 }
 
-char	*ft_clean_aux(char *aux, char *ret)
+void	*ft_ret_line(char *aux)
+{
+	char	*ret;
+	int		i;
+
+	i = 0;
+	if (aux[i] == '\0')
+		return (NULL);
+	while (aux[i] != '\0' && aux[i] != '\n')
+		i++;
+	i++;
+	ret = ft_calloc((i + 1), sizeof(char));
+	if (!ret)
+		return (NULL);
+	i = 0;
+	while (aux[i] != '\0' && aux[i] != '\n')
+	{
+		ret[i] = aux[i];
+		i++;
+	}
+	if (aux[i] != '\0' && aux[i] == '\n')
+		ret[i++] = '\n';
+	return (ret);
+}
+
+char	*ft_clean_aux(char *aux)
 {
 	char	*new_aux;
-	int		new_aux_length;
 	int		i;
 	int		j;
 
-	new_aux_length = ft_strlen(aux) - ft_strlen(ret);
-	new_aux = (char *) malloc(new_aux_length * sizeof (char) + 1);
+	i = 0;
+	while (aux[i] != '\0' && aux[i] != '\n')
+		i++;
+	new_aux = ft_calloc(ft_strlen(aux) - i, (sizeof(char) + 1));
 	if (!new_aux)
 		return (NULL);
-	i = ft_strlen(ret);
+	i++;
 	j = 0;
 	while (aux[i] != '\0')
 	{
@@ -85,5 +107,17 @@ char	*ft_clean_aux(char *aux, char *ret)
 		j++;
 	}
 	new_aux[j] = '\0';
+	free(aux);
 	return (new_aux);
+}
+
+char	*ft_buf_to_aux(char *aux, char *buf)
+{
+	char	*clean;
+
+	clean = ft_strjoin(aux, buf);
+	if (!clean)
+		return (NULL);
+	free(aux);
+	return (clean);
 }
