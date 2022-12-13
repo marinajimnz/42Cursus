@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: marinjim <marinjim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 13:01:05 by marinjim          #+#    #+#             */
-/*   Updated: 2022/12/13 18:48:59 by marinjim         ###   ########.fr       */
+/*   Updated: 2022/12/13 19:12:03 by marinjim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*get_next_line(int fd);
 char	*ft_read_line(int fd, char *aux);
@@ -20,16 +20,16 @@ void	*ft_free(char *aux, char *buf);
 
 char	*get_next_line(int fd)
 {
-	static char	*aux;
+	static char	*aux[4242];
 	char		*ret;
 
 	if (fd < 0)
 		return (NULL);
-	aux = ft_read_line(fd, aux);
-	if (!aux)
+	aux[fd] = ft_read_line(fd, aux[fd]);
+	if (!aux[fd])
 		return (NULL);
-	ret = ft_ret_line(aux);
-	aux = ft_clean_aux(aux);
+	ret = ft_ret_line(aux[fd]);
+	aux[fd] = ft_clean_aux(aux[fd]);
 	return (ret);
 }
 
