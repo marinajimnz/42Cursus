@@ -6,7 +6,7 @@
 /*   By: marinjim <marinjim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 11:52:57 by marinjim          #+#    #+#             */
-/*   Updated: 2023/02/09 15:05:27 by marinjim         ###   ########.fr       */
+/*   Updated: 2023/02/16 14:50:46 by marinjim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,17 +33,20 @@ int	main(int argc, char **argv)
 	pid_t	pid;
 	int		i;
 
-	pid = ft_atoi(argv[1]);
 	if (argc != 3)
 	{
 		ft_printf("%s", "\033[0;31mError, try: ./client + PID + 1arg\033[0m\n");
 		exit(0);
 	}
-	i = 0;
-	while (argv[2][i] != '\0')
+	else
 	{
-		ft_to_binary(pid, argv[2][i]);
-		i++;
+		pid = ft_atoi(argv[1]);
+		i = 0;
+		while (argv[2][i] != '\0')
+		{
+			ft_to_binary(pid, argv[2][i]);
+			i++;
+		}
 	}
 	return (0);
 }
